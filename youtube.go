@@ -10,11 +10,11 @@ import (
 
 const linkDownload = "http://www.youtube.com/get_video_info?&video_id="
 
-type Source interface {
-	GetDirectLink(url string) ([]Response, error)
+type Youtube struct {
+	Url string
 }
 
-type Response struct {
+type YoutubeResponse struct {
 	Author      string
 	DownloadURL string
 	Title       string
@@ -26,14 +26,18 @@ type Format struct {
 	VideoType, Quality, URL string
 }
 
-func Get(videoUrl string) (*Response, error) {
-	video := &Response{}
+func NewYoutubeHandler(url string) *Youtube {
+	return &Youtube{url}
+}
 
-	if videoUrl == "" {
+func (y *Youtube) Get() (*YoutubeResponse, error) {
+	video := &YoutubeResponse{}
+
+	if y.Url == "" {
 		return nil, errors.New("Empty Url")
 	}
 
-	urlList := strings.Split(videoUrl, "/")
+	urlList := strings.Split(y.Url, "/")
 	if len(urlList) < 4 {
 		return nil, errors.New("Invalid Url")
 	}

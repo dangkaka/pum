@@ -14,10 +14,12 @@ func main() {
 		return
 	}
 	for _, videoUrl := range args {
-		youtubeResponse, err := Get(videoUrl)
+		youtube := NewYoutubeHandler(videoUrl)
+		response, err := youtube.Get()
 		if err != nil {
 			fmt.Println(err)
+			return
 		}
-		fmt.Println(youtubeResponse.DownloadURL)
+		fmt.Println(response.Title, response.Author, response.DownloadURL)
 	}
 }
