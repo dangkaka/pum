@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/Sirupsen/logrus"
 	"github.com/cheggaaa/pb"
 	"io"
 	"log"
@@ -46,7 +45,7 @@ func write(objs []PreparedDownloadObject) {
 
 	pool, err := pb.StartPool(barList...)
 	if err != nil {
-		logrus.WithError(err).Error("cannot start pool")
+		log.Println("cannot start pool")
 		return
 	}
 
@@ -60,13 +59,13 @@ func write(objs []PreparedDownloadObject) {
 			out, err := os.OpenFile(o.Name, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 			defer out.Close()
 			if err != nil {
-				logrus.WithError(err).Errorf("cannot open file, file name = %s", o.Name)
+				log.Println("cannot open file, file name = %s", o.Name)
 				return
 			}
 
 			_, err = io.Copy(out, rd)
 			if err != nil {
-				logrus.WithError(err).Errorf("cannot copy file, file name = %s", o.Name)
+				log.Println("cannot copy file, file name = %s", o.Name)
 				return
 			}
 
@@ -87,7 +86,7 @@ func prepare(objects []DownloadObject) ([]PreparedDownloadObject, error) {
 			defer wg.Done()
 			resp, err := http.Get(obj.DownloadUrl)
 			if err != nil {
-				logrus.WithError(err).Error("failed to get response from download url")
+				log.Println("failed to get response from download url")
 				return
 			}
 
