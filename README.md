@@ -1,6 +1,6 @@
 # pum
 
-:dvd: :guitar: Youtube/nhaccuatui/zing mp3 downloader
+:dvd: :guitar: Youtube - nhaccuatui - zing mp3 downloader
 
 ![result](result.gif)
 
