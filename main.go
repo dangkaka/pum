@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"github.com/mattes/migrate/source"
 )
 
 const (
@@ -16,9 +15,10 @@ const (
 
 type DownloadObject struct {
 	Url         string
-	DownloadUrl string
 	Author      string
 	Title       string
+	DownloadUrl string
+	Type string
 }
 
 func main() {
@@ -29,6 +29,7 @@ func main() {
 		fmt.Println("Usage: pum <URLs>...")
 		return
 	}
+	var objects []DownloadObject
 	for _, url := range args {
 		switch {
 		case strings.Contains(url, youtube):
@@ -37,17 +38,18 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			download(downloadObject)
+			objects = append(objects, *downloadObject)
 		case strings.Contains(url, zing):
 			zing := NewZingHandler(url)
-			downloadUrl, err := zing.GetDownloadObject()
+			downloadObject, err := zing.GetDownloadObject()
 			if err != nil {
 				log.Fatal(err)
 			}
-			download(downloadObject)
+			objects = append(objects, *downloadObject)
 		case strings.Contains(url, nct):
 			nct := NewNCTHandler(url)
 			nct.GetDownloadObject()
 		}
 	}
+	download(objects)
 }
