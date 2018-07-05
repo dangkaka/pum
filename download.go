@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gopkg.in/cheggaaa/pb.v1"
+	"github.com/cheggaaa/pb"
 	"io"
 	"log"
 	"net/http"
@@ -13,7 +13,7 @@ import (
 func download(obj DownloadObject) {
 	resp, err := http.Get(obj.DownloadUrl)
 	if err != nil {
-		log.Println("failed to get response from download url")
+		log.Println("Could not reach download url", obj.DownloadUrl)
 		return
 	}
 	defer resp.Body.Close()
@@ -39,8 +39,9 @@ func download(obj DownloadObject) {
 	rd := bar.NewProxyReader(resp.Body)
 	_, err = io.Copy(out, rd)
 	if err != nil {
-		log.Println("cannot copy file, file name = %s", fullName)
+		log.Println("Could not copy file", fullName)
 		return
 	}
+	bar.Finish()
 	return
 }
