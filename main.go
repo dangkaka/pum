@@ -18,7 +18,7 @@ type DownloadObject struct {
 	Author      string
 	Title       string
 	DownloadUrl string
-	Type string
+	Type        string
 }
 
 func main() {
@@ -29,7 +29,6 @@ func main() {
 		fmt.Println("Usage: pum <URLs>...")
 		return
 	}
-	var objects []DownloadObject
 	for _, url := range args {
 		switch {
 		case strings.Contains(url, youtube):
@@ -38,18 +37,18 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			objects = append(objects, *downloadObject)
+			download(*downloadObject)
 		case strings.Contains(url, zing):
 			zing := NewZingHandler(url)
 			downloadObject, err := zing.GetDownloadObject()
 			if err != nil {
 				log.Fatal(err)
 			}
-			objects = append(objects, *downloadObject)
+			download(*downloadObject)
 		case strings.Contains(url, nct):
 			nct := NewNCTHandler(url)
 			nct.GetDownloadObject()
 		}
 	}
-	download(objects)
+	fmt.Println("Done!")
 }

@@ -40,7 +40,7 @@ func (y *Youtube) GetDownloadObject() (*DownloadObject, error) {
 		Author:      response.Author,
 		Title:       response.Title,
 		DownloadUrl: response.DownloadUrl,
-		Type: "mp4",
+		Type:        "mp4",
 	}, nil
 }
 

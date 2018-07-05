@@ -46,7 +46,7 @@ func (z *Zing) GetDownloadObject() (*DownloadObject, error) {
 		Title:       response.Data.Title,
 		Author:      response.Data.Artist,
 		DownloadUrl: fmt.Sprintf(zingLinkDownload, response.Data.Sources.Url.Link),
-		Type: "mp3",
+		Type:        "mp3",
 	}, nil
 }
 
