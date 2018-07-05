@@ -47,7 +47,11 @@ func main() {
 			download(*downloadObject)
 		case strings.Contains(url, nct):
 			nct := NewNCTHandler(url)
-			nct.GetDownloadObject()
+			downloadObject, err := nct.GetDownloadObject()
+			if err != nil {
+				log.Fatal(err)
+			}
+			download(*downloadObject)
 		}
 	}
 	fmt.Println("Done!")

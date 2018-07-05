@@ -19,7 +19,7 @@ type Zing struct {
 type ZingResponse struct {
 	Data struct {
 		Title   string `json:"title"`
-		Artist  string `json:"artist"`
+		Author  string `json:"artist"`
 		Sources struct {
 			Url  Source `json:"128"`
 			Url2 Source `json:"320"`
@@ -44,7 +44,7 @@ func (z *Zing) GetDownloadObject() (*DownloadObject, error) {
 	return &DownloadObject{
 		Url:         z.Url,
 		Title:       response.Data.Title,
-		Author:      response.Data.Artist,
+		Author:      response.Data.Author,
 		DownloadUrl: fmt.Sprintf(zingLinkDownload, response.Data.Sources.Url.Link),
 		Type:        "mp3",
 	}, nil
