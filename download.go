@@ -4,16 +4,14 @@ import (
 	"fmt"
 	"github.com/cheggaaa/pb"
 	"io"
-	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
 func download(obj DownloadObject) {
 	resp, err := http.Get(obj.DownloadUrl)
 	if err != nil {
-		log.Println("Could not reach download url", obj.DownloadUrl)
+		fmt.Println("Could not reach download url", obj.DownloadUrl, err)
 		return
 	}
 	defer resp.Body.Close()
@@ -23,11 +21,10 @@ func download(obj DownloadObject) {
 	out, err := os.Create(fullName)
 	defer out.Close()
 	if err != nil {
-		log.Println("Could not create file")
+		fmt.Println("Could not create file", err)
 		return
 	}
 	bar := pb.New(int(resp.ContentLength)).SetUnits(pb.U_BYTES)
-	bar.SetRefreshRate(200 * time.Microsecond)
 	bar.ShowSpeed = true
 	bar.ShowTimeLeft = true
 	bar.ShowBar = true
@@ -39,7 +36,7 @@ func download(obj DownloadObject) {
 	rd := bar.NewProxyReader(resp.Body)
 	_, err = io.Copy(out, rd)
 	if err != nil {
-		log.Println("Could not copy file", fullName)
+		fmt.Println("Could not copy file", fullName, err)
 		return
 	}
 	bar.Finish()
