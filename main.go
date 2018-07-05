@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"github.com/mattes/migrate/source"
 )
 
 const (
@@ -12,6 +13,13 @@ const (
 	zing    = "zing"
 	youtube = "youtube"
 )
+
+type DownloadObject struct {
+	Url         string
+	DownloadUrl string
+	Author      string
+	Title       string
+}
 
 func main() {
 	flag.Parse()
@@ -21,25 +29,25 @@ func main() {
 		fmt.Println("Usage: pum <URLs>...")
 		return
 	}
-	for _, videoUrl := range args {
+	for _, url := range args {
 		switch {
-		case strings.Contains(videoUrl, youtube):
-			youtube := NewYoutubeHandler(videoUrl)
-			downloadUrl, err := youtube.Get()
+		case strings.Contains(url, youtube):
+			youtube := NewYoutubeHandler(url)
+			downloadObject, err := youtube.GetDownloadObject()
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println(downloadUrl)
-		case strings.Contains(videoUrl, zing):
-			zing := NewZingHandler(videoUrl)
-			downloadUrl, err := zing.GetBest()
+			download(downloadObject)
+		case strings.Contains(url, zing):
+			zing := NewZingHandler(url)
+			downloadUrl, err := zing.GetDownloadObject()
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println(downloadUrl)
-		case strings.Contains(videoUrl, nct):
-			nct := NewNCTHandler(videoUrl)
-			nct.Get()
+			download(downloadObject)
+		case strings.Contains(url, nct):
+			nct := NewNCTHandler(url)
+			nct.GetDownloadObject()
 		}
 	}
 }

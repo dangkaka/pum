@@ -12,15 +12,18 @@ func NewNCTHandler(url string) *NCT {
 	return &NCT{url}
 }
 
-func (nct *NCT) GetBest() (string, error) {
-	response, err := nct.Get()
+func (nct *NCT) GetDownloadObject() (*DownloadObject, error) {
+	response, err := nct.Parse()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return response.DownloadUrl, nil
+	return &DownloadObject{
+		Url:         nct.Url,
+		DownloadUrl: response.DownloadUrl,
+	}, nil
 }
 
 //TODO
-func (nct *NCT) Get() (*NCTResponse, error) {
+func (nct *NCT) Parse() (*NCTResponse, error) {
 	return nil, nil
 }

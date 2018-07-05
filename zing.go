@@ -36,15 +36,20 @@ func NewZingHandler(url string) *Zing {
 	return &Zing{url}
 }
 
-func (z *Zing) GetBest() (string, error) {
-	response, err := z.Get()
+func (z *Zing) GetDownloadObject() (*DownloadObject, error) {
+	response, err := z.Parse()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return fmt.Sprintf(zingLinkDownload, response.Data.Sources.Url.Link), nil
+	return &DownloadObject{
+		Url:         z.Url,
+		Title:       response.Data.Title,
+		Author:      response.Data.Artist,
+		DownloadUrl: fmt.Sprintf(zingLinkDownload, response.Data.Sources.Url.Link),
+	}, nil
 }
 
-func (zing *Zing) Get() (*ZingResponse, error) {
+func (zing *Zing) Parse() (*ZingResponse, error) {
 	response := &ZingResponse{}
 	if zing.Url == "" {
 		return nil, errors.New("Empty Url")

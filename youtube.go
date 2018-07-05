@@ -30,15 +30,20 @@ func NewYoutubeHandler(url string) *Youtube {
 	return &Youtube{url}
 }
 
-func (y *Youtube) GetBest() (string, error) {
-	response, err := y.Get()
+func (y *Youtube) GetDownloadObject() (*DownloadObject, error) {
+	response, err := y.Parse()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return response.DownloadUrl, nil
+	return &DownloadObject{
+		Url:         y.Url,
+		Author:      response.Author,
+		Title:       response.Title,
+		DownloadUrl: response.DownloadUrl,
+	}, nil
 }
 
-func (y *Youtube) Get() (*YoutubeResponse, error) {
+func (y *Youtube) Parse() (*YoutubeResponse, error) {
 	video := &YoutubeResponse{}
 
 	if y.Url == "" {
