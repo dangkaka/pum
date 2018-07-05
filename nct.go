@@ -61,7 +61,6 @@ func (nct *NCT) Parse() (*NCTResponse, error) {
 	keyPattern := "songencryptkey=\"([a-zA-Z0-9]*)\""
 
 	key, err := parseResponse(respBytes, keyPattern)
-	fmt.Println(fmt.Sprintf(nctWmUrl, videoID))
 	if err != nil {
 		return nil, err
 	}

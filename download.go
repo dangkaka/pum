@@ -29,6 +29,7 @@ func download(obj DownloadObject) {
 	bar.ShowTimeLeft = true
 	bar.ShowBar = true
 	bar.ShowPercent = true
+	bar.SetWidth(80)
 	bar.Prefix(fullName)
 
 	bar.Start()
