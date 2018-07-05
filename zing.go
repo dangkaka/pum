@@ -1,13 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
-	"encoding/json"
 	"net/http"
 )
 
-const linkDownloadSong = "https://mp3.zing.vn/xhr/media/get-url-download?type=audio&sig=%s&code=%s"
+const (
+	zingLinkInfo     = "https://mp3.zing.vn/xhr/media/get-url-download?type=audio&sig=%s&code=%s"
+	zingLinkDownload = "https://mp3.zing.vn%s"
+)
 
 type Zing struct {
 	Url string
@@ -15,8 +18,8 @@ type Zing struct {
 
 type ZingResponse struct {
 	Data struct {
-		Title  string `json:"title"`
-		Artist string `json:"artist"`
+		Title   string `json:"title"`
+		Artist  string `json:"artist"`
 		Sources struct {
 			Url  Source `json:"128"`
 			Url2 Source `json:"320"`
@@ -31,6 +34,14 @@ type Source struct {
 
 func NewZingHandler(url string) *Zing {
 	return &Zing{url}
+}
+
+func (z *Zing) GetBest() (string, error) {
+	response, err := z.Get()
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf(zingLinkDownload, response.Data.Sources.Url.Link), nil
 }
 
 func (zing *Zing) Get() (*ZingResponse, error) {
@@ -54,7 +65,7 @@ func (zing *Zing) Get() (*ZingResponse, error) {
 		return nil, err
 	}
 
-	downloadSourceUrl := fmt.Sprintf(linkDownloadSong, sig, code)
+	downloadSourceUrl := fmt.Sprintf(zingLinkInfo, sig, code)
 
 	res, err := http.Get(downloadSourceUrl)
 	if err != nil {
@@ -68,4 +79,3 @@ func (zing *Zing) Get() (*ZingResponse, error) {
 
 	return response, nil
 }
-

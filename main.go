@@ -3,6 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
+	"strings"
+)
+
+const (
+	nct     = "nhaccuatui"
+	zing    = "zing"
+	youtube = "youtube"
 )
 
 func main() {
@@ -14,12 +22,24 @@ func main() {
 		return
 	}
 	for _, videoUrl := range args {
-		youtube := NewYoutubeHandler(videoUrl)
-		response, err := youtube.Get()
-		if err != nil {
-			fmt.Println(err)
-			return
+		switch {
+		case strings.Contains(videoUrl, youtube):
+			youtube := NewYoutubeHandler(videoUrl)
+			downloadUrl, err := youtube.Get()
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(downloadUrl)
+		case strings.Contains(videoUrl, zing):
+			zing := NewZingHandler(videoUrl)
+			downloadUrl, err := zing.GetBest()
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(downloadUrl)
+		case strings.Contains(videoUrl, nct):
+			nct := NewNCTHandler(videoUrl)
+			nct.Get()
 		}
-		fmt.Println(response.Title, response.Author, response.DownloadURL)
 	}
 }

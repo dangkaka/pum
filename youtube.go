@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const linkDownload = "http://www.youtube.com/get_video_info?&video_id="
+const youtubeLinkInfo = "http://www.youtube.com/get_video_info?&video_id="
 
 type Youtube struct {
 	Url string
@@ -16,7 +16,7 @@ type Youtube struct {
 
 type YoutubeResponse struct {
 	Author      string
-	DownloadURL string
+	DownloadUrl string
 	Title       string
 	Formats     []Format
 }
@@ -28,6 +28,14 @@ type Format struct {
 
 func NewYoutubeHandler(url string) *Youtube {
 	return &Youtube{url}
+}
+
+func (y *Youtube) GetBest() (string, error) {
+	response, err := y.Get()
+	if err != nil {
+		return "", err
+	}
+	return response.DownloadUrl, nil
 }
 
 func (y *Youtube) Get() (*YoutubeResponse, error) {
@@ -45,7 +53,7 @@ func (y *Youtube) Get() (*YoutubeResponse, error) {
 	//get videoId from watch?v=U1M5GDNNhCo
 	videoID := urlList[3][8:]
 
-	resp, err := http.Get(linkDownload + videoID)
+	resp, err := http.Get(youtubeLinkInfo + videoID)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +81,7 @@ func (y *Youtube) Get() (*YoutubeResponse, error) {
 			})
 	}
 	video.Formats = formats
-	video.DownloadURL = formats[0].URL //best
+	video.DownloadUrl = formats[0].URL //best
 
 	return video, nil
 }

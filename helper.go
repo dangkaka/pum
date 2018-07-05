@@ -1,10 +1,10 @@
 package main
 
 import (
-	"regexp"
 	"errors"
-	"net/http"
 	"io/ioutil"
+	"net/http"
+	"regexp"
 )
 
 func parseResponse(input []byte, pattern string) (string, error) {
@@ -20,7 +20,7 @@ func parseResponse(input []byte, pattern string) (string, error) {
 	return string(submatches[1]), nil
 }
 
-func GetBody(url string) ([]byte, error){
+func GetBody(url string) ([]byte, error) {
 	res, err := http.Get(url)
 	if err != nil {
 		return nil, err

@@ -5,13 +5,22 @@ type NCT struct {
 }
 
 type NCTResponse struct {
+	DownloadUrl string
 }
 
 func NewNCTHandler(url string) *NCT {
 	return &NCT{url}
 }
 
+func (nct *NCT) GetBest() (string, error) {
+	response, err := nct.Get()
+	if err != nil {
+		return "", err
+	}
+	return response.DownloadUrl, nil
+}
+
 //TODO
-func (nct *NCT) Get(link string) (*NCTResponse, error) {
+func (nct *NCT) Get() (*NCTResponse, error) {
 	return nil, nil
 }
